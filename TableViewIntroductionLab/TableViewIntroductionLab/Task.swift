@@ -1,7 +1,8 @@
 import Foundation
 
 struct Task {
-    enum Status {
+    
+    enum Status: String, CaseIterable {
         case notStarted
         case inProgress
         case completed
@@ -63,5 +64,39 @@ struct Task {
                  dueDate: dateFormatter.date(from: "04-13-2020")!),
         ]
     }
+ 
+    // The static func it going to help access the filter task
+    // so we can call it in the view controller so it can sort it for us .
+     static func filterTask() -> [[Task]] {
+    
+        let sortedTask = Task.allTasks.sorted { $0.status.rawValue < $1.status.rawValue }
+       // let sortedStatus = allTask.sorted {$0.status < $1.status}
+        let taskStatus: Set<String> = Set(Task.allTasks.map { $0.status.rawValue })
+                
+                var arrayOfStatus = Array(repeating: [Task](), count: taskStatus.count)
+                
+                var currentIndex = 0
+                var currnetStatus = sortedTask.first?.status
+                for status in sortedTask{
+                    if status.status == currnetStatus {
+                        arrayOfStatus[currentIndex].append(status)
+                    }
+                 else {
+                    currentIndex += 1
+                    currnetStatus = status.status
+                        arrayOfStatus[currentIndex].append(status)
+     
+                }
+                }
+         
+            return arrayOfStatus
+        }
 
-}
+
+
+
+        }
+        
+            
+
+ 
